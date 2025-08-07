@@ -124,4 +124,4 @@ Whether you're a reader or a publisher, **NewsEdge** delivers a dynamic and resp
 git clone https://github.com/kira217-cyber/newsedge_client
 
 # Backend
-git clone https://github.com/programing-hero-b11/newsedge-server-kira217-cyber
+git clone https://github.com/kira217-cyber/newsedge_server
