@@ -17,11 +17,10 @@ const Register = () => {
     formState: { errors },
   } = useForm();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false); // ✅ loading state যোগ করা হলো
 
   const onSubmit = async (data) => {
     const { name, email, password, photo } = data;
-    const imageFile = photo[0];
-    const photoUrl = await imageUpload(imageFile);
 
     // Password validation
     const passRegEx = {
@@ -44,9 +43,14 @@ const Register = () => {
     }
 
     try {
+      setLoading(true); // ✅ Start loading
+      const imageFile = photo[0];
+      const photoUrl = await imageUpload(imageFile);
+
       // First time user register
       const result = await signUp(email, password);
-      // save name and photo user profile
+
+      // save name and photo in user profile
       await updateUser({ displayName: name, photoURL: photoUrl }).then(() => {
         setUser((prevUser) => {
           return {
@@ -56,21 +60,21 @@ const Register = () => {
           };
         });
       });
-      console.log(result);
 
-      //  Save the user in the data base
+      // Save user in the database
       const userData = {
         name,
         email,
         image: photoUrl,
       };
-      // Save user data in db
       await saveUserInDb(userData);
 
       toast.success("Registered successfully!");
       navigate("/");
     } catch (err) {
       toast.error(err.message);
+    } finally {
+      setLoading(false); // ✅ Stop loading
     }
   };
 
@@ -149,14 +153,15 @@ const Register = () => {
           <button
             type="submit"
             className="btn w-full bg-[#4C3AFF] text-white hover:bg-[#372fd1]"
+            disabled={loading} // ✅ disable button while loading
           >
-            Register
+            {loading ? "Loading..." : "Register"} {/* ✅ loading text */}
           </button>
         </form>
 
         <div className="divider">or</div>
 
-        <SocialGoogleLogin></SocialGoogleLogin>
+        <SocialGoogleLogin />
 
         <p className="mt-4 text-sm text-center text-gray-500">
           Already have an account?{" "}

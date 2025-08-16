@@ -8,6 +8,7 @@ import {
   FaSun,
   FaSignOutAlt,
   FaUserCog,
+  FaHome,
 } from "react-icons/fa";
 
 const Sidebar = ({ handleLogout, handleThemeToggle, theme }) => {
@@ -75,6 +76,14 @@ const Sidebar = ({ handleLogout, handleThemeToggle, theme }) => {
       <div className="px-4 pb-6">
         <div className="border-t border-gray-300 dark:border-gray-600 mb-4"></div>
         <div className="flex flex-col gap-2">
+          <Link
+            to="/"
+            onClick={closeDrawer}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-[#4C3AFF]/10"
+          >
+            <FaHome className="text-lg" />
+            <span>Back To Home</span>
+          </Link>
           <NavLink
             to="/dashboard/profile"
             onClick={closeDrawer}

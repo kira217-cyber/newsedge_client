@@ -5,6 +5,7 @@ import { imageUpload } from "../../../utils/utils";
 import { toast } from "react-toastify";
 import { FaImage } from "react-icons/fa";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import Loading from "../../../components/shared/Loading/Loading";
 
 const DashboardProfile = () => {
   const { user, updateUser, setUser } = useAuth();
@@ -70,7 +71,7 @@ const DashboardProfile = () => {
   };
 
   if (loading) {
-    return <div className="p-6 text-center font-semibold">Loading...</div>;
+    return <Loading></Loading>
   }
 
   return (

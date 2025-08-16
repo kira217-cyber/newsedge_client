@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { Link } from "react-router";
+import Loading from "../../../components/shared/Loading/Loading"; // spinner component
 
 const ManageArticles = () => {
   const axiosSecure = useAxiosSecure();
@@ -10,6 +11,7 @@ const ManageArticles = () => {
   const [selectedId, setSelectedId] = useState(null);
   const [search, setSearch] = useState("");
   const [filteredArticles, setFilteredArticles] = useState([]);
+  const [actionLoading, setActionLoading] = useState(false); // ✅ action loading
 
   const {
     data: articles = [],
@@ -36,34 +38,61 @@ const ManageArticles = () => {
   }, [search, articles]);
 
   const handleApprove = async (id) => {
-    const res = await axiosSecure.patch(`/articles/approve/${id}`);
-    if (res.data.modifiedCount > 0) {
-      toast.success("Article Approved!");
-      refetch();
+    setActionLoading(true);
+    try {
+      const res = await axiosSecure.patch(`/articles/approve/${id}`);
+      if (res.data.modifiedCount > 0) {
+        toast.success("Article Approved!");
+        refetch();
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Approve failed!");
+    } finally {
+      setActionLoading(false);
     }
   };
 
   const handleDecline = async () => {
     if (!declineReason) return toast.error("Reason is required!");
-    const res = await axiosSecure.patch(`/articles/decline/${selectedId}`, {
-      reason: declineReason,
-    });
-    if (res.data.modifiedCount > 0) {
-      toast.success("Article Declined!");
-      setSelectedId(null);
-      setDeclineReason("");
-      document.getElementById("decline_modal").close();
-      refetch();
+    setActionLoading(true);
+    try {
+      const res = await axiosSecure.patch(`/articles/decline/${selectedId}`, {
+        reason: declineReason,
+      });
+      if (res.data.modifiedCount > 0) {
+        toast.success("Article Declined!");
+        setSelectedId(null);
+        setDeclineReason("");
+        document.getElementById("decline_modal").close();
+        refetch();
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Decline failed!");
+    } finally {
+      setActionLoading(false);
     }
   };
 
   const handleMakePremium = async (id) => {
-    const res = await axiosSecure.patch(`/articles/premium/${id}`);
-    if (res.data.modifiedCount > 0) {
-      toast.success("Marked as Premium!");
-      refetch();
+    setActionLoading(true);
+    try {
+      const res = await axiosSecure.patch(`/articles/premium/${id}`);
+      if (res.data.modifiedCount > 0) {
+        toast.success("Marked as Premium!");
+        refetch();
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Action failed!");
+    } finally {
+      setActionLoading(false);
     }
   };
+
+  // Loading spinner show করা
+  if (isLoading || actionLoading) return <Loading />;
 
   return (
     <div className="p-4 max-w-7xl mx-auto overflow-auto">

@@ -4,10 +4,14 @@ import { axiosSecure } from "../../../hooks/useAxiosSecure";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { FaFileImage } from "react-icons/fa";
+import Loading from "../../../components/shared/Loading/Loading";
+
 
 const AddPublisher = () => {
   const [uploadedImage, setUploadedImage] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(false);
+  const [loading, setLoading] = useState(false); // ✅ loading state
+
   const {
     register,
     handleSubmit,
@@ -16,6 +20,7 @@ const AddPublisher = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
+    setLoading(true); // loading শুরু
     try {
       const publisherInfo = {
         name: data.name,
@@ -26,29 +31,30 @@ const AddPublisher = () => {
       await axiosSecure.post(`/publishers`, publisherInfo);
       toast.success("Publisher added successfully!");
       reset();
+      setUploadedImage(null);
+      setImageUploadError(false);
     } catch (error) {
       console.error("Image upload or DB save failed:", error);
       toast.error("Something went wrong!");
+    } finally {
+      setLoading(false); // loading শেষ
     }
-    reset(); // reset react-hook-form fields
-    setUploadedImage(null); // reset uploaded image
-    setImageUploadError("");
   };
 
   const handleImageUpload = async (e) => {
     e.preventDefault();
     const image = e.target.files[0];
-    console.log(image);
     try {
-      // image url response from imgbb
       const imageUrl = await imageUpload(image);
-      console.log(imageUrl);
       setUploadedImage(imageUrl);
     } catch (err) {
       setImageUploadError("Image Upload Failed");
       console.log(err);
     }
   };
+
+  // যদি loading হয় spinner দেখাও
+  if (loading) return <Loading />;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200 px-4">

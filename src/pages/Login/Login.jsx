@@ -17,15 +17,16 @@ const Login = () => {
   } = useForm();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false); // ✅ loading state
   const location = useLocation();
   const from = location.state || "/";
-  console.log(from);
 
   // Handle login with email and password
   const onSubmit = async (data) => {
-    const { name, email, password, photo } = data;
+    const { email, password } = data;
     try {
-      //User Login in the data base
+      setLoading(true); // ✅ start loading
+      // User Login in the database
       const result = await login(email, password);
 
       const userData = {
@@ -33,12 +34,15 @@ const Login = () => {
         email: result?.user?.email,
         image: result?.user?.photoURL,
       };
-      // update user in the data base
+      // update user in the database
       await saveUserInDb(userData);
+
       toast.success("Login successful!");
       navigate(from);
     } catch (err) {
       toast.error("Login failed. Please check your email and password.");
+    } finally {
+      setLoading(false); // ✅ stop loading
     }
   };
 
@@ -90,15 +94,16 @@ const Login = () => {
           <button
             type="submit"
             className="btn w-full bg-[#4C3AFF] text-white hover:bg-[#372fd1]"
+            disabled={loading} // ✅ disable button while loading
           >
-            Login
+            {loading ? "Loading..." : "Login"} {/* ✅ loading text */}
           </button>
         </form>
 
         <div className="divider">or</div>
 
         {/* Google Login */}
-        <SocialGoogleLogin></SocialGoogleLogin>
+        <SocialGoogleLogin />
 
         {/* Redirect to Register */}
         <p className="mt-4 text-sm text-center text-gray-500">

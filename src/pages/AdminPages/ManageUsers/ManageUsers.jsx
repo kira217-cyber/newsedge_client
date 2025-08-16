@@ -46,11 +46,11 @@ const ManageUsers = () => {
   );
 
   return (
-    <div className="w-full px-2 sm:px-4 py-4 space-y-6">
-      <h2 className="text-2xl font-bold text-center">Manage Users</h2>
+    <div className="p-4 max-w-7xl mx-auto overflow-auto">
+      <h2 className="text-2xl font-bold text-center mb-5">Manage Users</h2>
 
       {/* 🔎 Search Bar */}
-      <div className="flex justify-center">
+      <div className="flex justify-center mb-5">
         <input
           type="text"
           placeholder="Search by email..."
