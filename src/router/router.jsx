@@ -50,9 +50,8 @@ export const router = createBrowserRouter([
       {
         path: "subscription",
         element: (
-          <PrivetRoutes>
+          
             <Subscription></Subscription>
-          </PrivetRoutes>
         ),
       },
       {

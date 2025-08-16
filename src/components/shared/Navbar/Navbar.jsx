@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router";
 import { FaMoon, FaSun } from "react-icons/fa";
-import { BiUserCircle, BiCreditCard } from "react-icons/bi"
+import { BiUserCircle, BiCreditCard } from "react-icons/bi";
 import { MdOutlineLogout } from "react-icons/md";
 import "./Navbar.css";
 import useAuth from "../../../hooks/useAuth";
@@ -47,9 +47,7 @@ const Navbar = () => {
       <li>
         <NavLink to="/all-articles">All Articles</NavLink>
       </li>
-      <li>
-        <NavLink to="/add-article">Add Articles</NavLink>
-      </li>
+
       <li>
         <NavLink to="/subscription">Subscription</NavLink>
       </li>
@@ -58,6 +56,9 @@ const Navbar = () => {
           <>
             <li>
               <NavLink to="/my-articles">My Articles</NavLink>
+            </li>
+            <li>
+              <NavLink to="/add-article">Add Articles</NavLink>
             </li>
           </>
         )}
