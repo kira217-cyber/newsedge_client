@@ -5,6 +5,8 @@ import useStatus from "../../hooks/useStatus";
 import { FaEye } from "react-icons/fa";
 import { motion } from "framer-motion";
 import moment from "moment";
+import Loading from "../../components/shared/Loading/Loading";
+// ⬅️ ধরুন আপনার Loading কম্পোনেন্ট এখানে আছে
 
 const AllArticles = () => {
   const axiosSecure = useAxiosSecure();
@@ -16,6 +18,7 @@ const AllArticles = () => {
   const [filters, setFilters] = useState({ publisher: "", tags: "", search: "" });
   const [page, setPage] = useState(1);
   const [totalArticles, setTotalArticles] = useState(0);
+  const [loading, setLoading] = useState(true); // ✅ Loading state
   const limit = 9;
 
   useEffect(() => {
@@ -23,6 +26,7 @@ const AllArticles = () => {
   }, [axiosSecure]);
 
   useEffect(() => {
+    setLoading(true); // ✅ API কল শুরু হওয়ার সময় Loading true
     const { publisher, tags, search } = filters;
     const query = new URLSearchParams();
     if (publisher) query.append("publisher", publisher);
@@ -31,10 +35,12 @@ const AllArticles = () => {
     query.append("page", page);
     query.append("limit", limit);
 
-    axiosSecure(`/articles?${query.toString()}`).then((res) => {
-      setArticles(res.data.articles);
-      setTotalArticles(res.data.total);
-    });
+    axiosSecure(`/articles?${query.toString()}`)
+      .then((res) => {
+        setArticles(res.data.articles);
+        setTotalArticles(res.data.total);
+      })
+      .finally(() => setLoading(false)); // ✅ ডেটা আসার পর Loading false
   }, [filters, page, axiosSecure]);
 
   const totalPages = Math.ceil(totalArticles / limit);
@@ -47,7 +53,9 @@ const AllArticles = () => {
     navigate(`/article-details/${articleId}`);
   };
 
-  if (isStatusLoading) return <div className="text-center py-10">Loading...</div>;
+  if (loading || isStatusLoading) {
+    return <Loading />; // ✅ যতক্ষণ ডেটা লোড হবে, ততক্ষণ Loading দেখাবে
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-6 mt-20">
@@ -82,8 +90,21 @@ const AllArticles = () => {
           value={filters.tags}
         >
           <option value="">All Tags</option>
-          {["crime", "politics", "sports", "technology", "health", "business", "education", "environment", "travel", "weather"].map(tag => (
-            <option key={tag} value={tag}>{tag}</option>
+          {[
+            "crime",
+            "politics",
+            "sports",
+            "technology",
+            "health",
+            "business",
+            "education",
+            "environment",
+            "travel",
+            "weather",
+          ].map((tag) => (
+            <option key={tag} value={tag}>
+              {tag}
+            </option>
           ))}
         </select>
       </div>
@@ -119,7 +140,9 @@ const AllArticles = () => {
                     </span>
                   )}
                 </h2>
-                <p className="text-sm text-gray-500">Publisher: {article.publisher}</p>
+                <p className="text-sm text-gray-500">
+                  Publisher: {article.publisher}
+                </p>
                 <p className="line-clamp-3">{article.description}</p>
                 <p className="text-xs text-gray-400 mt-2">
                   Published: {moment(article.createdAt).format("LL")}
@@ -133,7 +156,9 @@ const AllArticles = () => {
                       isDisabled ? "btn-disabled" : "btn-primary btn-outline"
                     }`}
                     disabled={isDisabled}
-                    onClick={() => !isDisabled && handleDetailsClick(article._id)}
+                    onClick={() =>
+                      !isDisabled && handleDetailsClick(article._id)
+                    }
                   >
                     {isDisabled ? "Premium Only" : "Details"}
                   </button>
@@ -149,7 +174,9 @@ const AllArticles = () => {
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((pg) => (
           <button
             key={pg}
-            className={`btn btn-sm ${pg === page ? "btn-active" : "btn-outline"}`}
+            className={`btn btn-sm ${
+              pg === page ? "btn-active" : "btn-outline"
+            }`}
             onClick={() => setPage(pg)}
           >
             {pg}

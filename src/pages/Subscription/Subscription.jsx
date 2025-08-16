@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import Loading from "../../components/shared/Loading/Loading";
 
 const plans = [
   {
@@ -52,10 +54,22 @@ const plans = [
 
 const Subscription = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true); // ✅ Loading State
+
+  useEffect(() => {
+    // শুধু ডেমোর জন্য ১ সেকেন্ড লোডিং দেখাবে
+    const timer = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSubscribe = (plan) => {
     navigate("/payment", { state: { plan } });
   };
+
+  // ✅ Loading দেখাবে
+  if (loading) {
+    return <Loading></Loading>
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-12 mt-14">
