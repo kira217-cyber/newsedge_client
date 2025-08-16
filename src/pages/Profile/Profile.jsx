@@ -5,6 +5,7 @@ import { imageUpload } from "../../utils/utils";
 import { toast } from "react-toastify";
 import { FaImage } from "react-icons/fa";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import Loading from "../../components/shared/Loading/Loading";
 
 const Profile = () => {
   const { user, updateUser, setUser } = useAuth();
@@ -12,6 +13,7 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [hovering, setHovering] = useState(false);
   const axiosSecure = useAxiosSecure();
+
   const {
     register,
     handleSubmit,
@@ -24,6 +26,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (userEmail) {
+      setLoading(true); // ✅ ডেটা লোড শুরু হলে
       axiosSecure(`/users/${userEmail}`)
         .then((res) => {
           setDbUser(res.data);
@@ -31,14 +34,14 @@ const Profile = () => {
             name: res.data?.name,
             email: res.data?.email,
           });
-          setLoading(false);
+          setLoading(false); // ✅ ডেটা এলে লোডিং false
         })
         .catch((err) => {
           toast.error("Failed to fetch user data");
-          setLoading(false);
+          setLoading(false); // ✅ এরর হলে ও false
         });
     }
-  }, [userEmail, reset]);
+  }, [userEmail, reset, axiosSecure]);
 
   const onSubmit = async (data) => {
     try {
@@ -69,8 +72,13 @@ const Profile = () => {
     }
   };
 
+  // ✅ লোডিং চলাকালীন Loading কম্পোনেন্ট দেখাবে
   if (loading) {
-    return <div className="p-6 text-center font-semibold">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <Loading />
+      </div>
+    );
   }
 
   return (
@@ -92,15 +100,13 @@ const Profile = () => {
             className="w-24 h-24 object-cover rounded-full border shadow-md transition duration-300"
           />
           {hovering && (
-            <>
-              <label className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center rounded-full cursor-pointer transition duration-300">
-                <FaImage className="text-white text-xl mb-1" />
-                <span className="text-white text-sm font-medium">
-                  Change Photo
-                </span>
-                <input type="file" {...register("image")} className="hidden" />
-              </label>
-            </>
+            <label className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center rounded-full cursor-pointer transition duration-300">
+              <FaImage className="text-white text-xl mb-1" />
+              <span className="text-white text-sm font-medium">
+                Change Photo
+              </span>
+              <input type="file" {...register("image")} className="hidden" />
+            </label>
           )}
         </div>
 

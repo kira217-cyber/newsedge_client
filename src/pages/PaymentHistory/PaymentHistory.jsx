@@ -2,17 +2,32 @@ import React, { useEffect, useState } from "react";
 import moment from "moment";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import useAuth from "../../hooks/useAuth";
+import Loading from "../../components/shared/Loading/Loading";
+
 
 const PaymentHistory = () => {
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const [payments, setPayments] = useState([]);
+  const [loading, setLoading] = useState(true); // ✅ লোডিং স্টেট
 
   useEffect(() => {
-    axiosSecure.get("/user/payments").then((res) => {
-      setPayments(res.data);
-    });
+    setLoading(true); // ✅ ডেটা লোড শুরু হলে লোডিং true হবে
+    axiosSecure.get("/user/payments")
+      .then((res) => {
+        setPayments(res.data);
+        setLoading(false); // ✅ ডেটা এলে লোডিং false হবে
+      })
+      .catch(() => setLoading(false)); // ✅ এরর হলে ও false করে দিবে
   }, [axiosSecure]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <Loading /> {/* ✅ লোডিং কম্পোনেন্ট */}
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10 mt-20">
@@ -23,7 +38,7 @@ const PaymentHistory = () => {
       {/* ✅ Laptop View: Table */}
       <div className="hidden lg:block">
         <table className="table w-full text-sm border rounded-lg">
-          <thead className="">
+          <thead>
             <tr>
               <th className="py-3 px-4 text-left">Name</th>
               <th className="py-3 px-4 text-left">Email</th>
