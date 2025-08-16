@@ -5,6 +5,7 @@ import Sidebar from "../components/Sidebar/Sidebar";
 import useAuth from "../hooks/useAuth";
 import { toast } from "react-toastify";
 
+
 const DashboardLayout = () => {
   const { logOut } = useAuth();
   const [theme, setTheme] = useState("light");
@@ -29,6 +30,7 @@ const DashboardLayout = () => {
   };
   return (
     <div className="drawer lg:drawer-open min-h-screen bg-base-100 overflow-x-hidden">
+  
       <input id="dashboard-drawer" type="checkbox" className="drawer-toggle" />
 
       {/* drawer content */}
