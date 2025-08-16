@@ -60,7 +60,7 @@ const AddPublisher = () => {
     <div className="min-h-screen flex items-center justify-center bg-base-200 px-4">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white dark:bg-base-100 p-6 md:p-10 rounded-lg shadow-xl w-full max-w-md space-y-5"
+        className="dark:bg-base-100 p-6 md:p-10 rounded-lg shadow-xl w-full max-w-md space-y-5"
       >
         <h2 className="text-2xl font-bold text-center text-[#4C3AFF]">
           Add Publisher
