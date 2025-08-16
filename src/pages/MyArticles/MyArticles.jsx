@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import Loading from "../../components/shared/Loading/Loading";
 
 const MyArticles = () => {
   const { user } = useAuth();
@@ -42,7 +43,23 @@ const MyArticles = () => {
     document.getElementById("reasonModal").showModal();
   };
 
-  if (isLoading) return <p className="text-center py-10">Loading...</p>;
+  // ✅ Loading অবস্থায়
+  if (isLoading) {
+    return (
+      <Loading></Loading>
+    );
+  }
+
+  // ✅ যদি ইউজারের কোনো আর্টিকেল না থাকে
+  if (articles.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-xl font-semibold text-gray-600">
+          You don&apos;t have any articles yet. Please add an article.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 mt-20">
