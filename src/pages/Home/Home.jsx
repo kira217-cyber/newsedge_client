@@ -7,6 +7,11 @@ import Plans from "../../components/Plans/Plans";
 import CountUp from "../../components/CountUp/CountUp";
 import NewsTicker from "../../components/NewsTricker/NewsTricker";
 import { Feedback } from "../../components/Feedback/Feedback";
+import EditorsPick from "../../components/EditorsPick/EditorsPick";
+import Polls from "../../components/Polls/Polls";
+import FeaturedInterviews from "../../components/FeaturedInterviews/FeaturedInterviews";
+import UpcomingEvents from "../../components/UpcomingEvents/UpcomingEvents";
+import PromoBanner from "../../components/PromoBanner/PromoBanner";
 
 const Home = () => {
   const [showModal, setShowModal] = useState(false);
@@ -26,9 +31,15 @@ const Home = () => {
       <AllPublisher />
       <NewsTicker />
       <TrendingArticles />
+      <EditorsPick></EditorsPick>
       <Plans />
+      <FeaturedInterviews></FeaturedInterviews>
+      
       <Feedback />
+      <UpcomingEvents></UpcomingEvents>
+      <Polls />
       <CountUp />
+      <PromoBanner />
 
       {/* 🌟 Stylish Large Subscription Modal */}
       {showModal && (

@@ -3,7 +3,7 @@ import React from "react";
 export const Feedback = () => {
   return (
     <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
-        <h1 className="flex justify-center items-center font-bold text-4xl mb-8">Our Mission</h1>
+        <h1 className="flex justify-center items-center font-bold text-4xl mb-8">💡 Our Mission</h1>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
         {/* Step Text Section */}
         <div className="grid gap-6 md:grid-cols-2 md:col-span-2 lg:col-span-3">
